@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Will you be my Valentine?</title>
+
+    <style>
+        body{
+            margin:0;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#ffe6f0;
+            font-family:Arial;
+        }
+
+        .card{
+            background:white;
+            padding:40px;
+            border-radius:14px;
+            text-align:center;
+            box-shadow:0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            margin-bottom:30px;
+        }
+
+        button{
+            padding:12px 26px;
+            font-size:18px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        #yes{
+            background:#ff4d88;
+            color:white;
+            opacity:0.5;
+            pointer-events:none;
+        }
+
+        #no{
+            background:#ddd;
+            position:absolute;
+        }
+
+        .btn-container{
+            position:relative;
+            height:120px;
+        }
+
+        .timer{
+            margin-top:15px;
+            color:#777;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Harshita, will you be my Valentine? 💖</h1>
+
+    <div class="btn-container">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+    </div>
+
+    <div class="timer" id="timer">
+        You can press YES in 10 seconds 🙂
+    </div>
+
+</div>
+
+<script>
+
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const timerText = document.getElementById("timer");
+
+let seconds = 10;
+
+// countdown
+const countdown = setInterval(() => {
+
+    seconds--;
+    timerText.innerText = "You can press YES in " + seconds + " seconds 🙂";
+
+    if(seconds <= 0){
+        clearInterval(countdown);
+        yesBtn.style.opacity = "1";
+        yesBtn.style.pointerEvents = "auto";
+        timerText.innerText = "Now you can press YES 😌";
+    }
+
+},1000);
+
+
+// move NO button
+function moveButton(){
+
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+// works on desktop hover
+noBtn.addEventListener("mouseover", moveButton);
+
+// works on mobile touch
+noBtn.addEventListener("touchstart", moveButton);
+
+
+// redirect
+yesBtn.addEventListener("click", () => {
+    window.location.href = "yes.html";
+});
+
+</script>
+
+</body>
+</html>
