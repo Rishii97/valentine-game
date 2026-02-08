@@ -3,67 +3,133 @@
 <head>
     <title>Will you be my Valentine?</title>
 
-    <style>
-        body{
-            margin:0;
-            height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            background:#ffe6f0;
-            font-family:Arial;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .card{
-            background:white;
-            padding:40px;
-            border-radius:14px;
-            text-align:center;
-            box-shadow:0 6px 20px rgba(0,0,0,0.1);
-        }
+<style>
 
-        h1{
-            margin-bottom:30px;
-        }
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ffe6f0,#ffd6e7);
+    font-family:Arial;
+    overflow:hidden;
+}
 
-        button{
-            padding:12px 26px;
-            font-size:18px;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-        }
+/* ❤️ Floating Hearts Container */
+.hearts{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    overflow:hidden;
+    z-index:0;
+}
 
-        #yes{
-            background:#ff4d88;
-            color:white;
-            opacity:0.5;
-            pointer-events:none;
-        }
+/* Individual hearts */
+.hearts span{
+    position:absolute;
+    bottom:-20px;
+    animation:float linear infinite;
+}
 
-        #no{
-            background:#ddd;
-            position:absolute;
-        }
+/* Floating animation */
+@keyframes float{
+    from{
+        transform:translateY(0);
+        opacity:1;
+    }
+    to{
+        transform:translateY(-110vh);
+        opacity:0;
+    }
+}
 
-        .btn-container{
-            position:relative;
-            height:120px;
-        }
+/* Card ABOVE hearts */
+.card{
+    position:relative;
+    z-index:2;
+    background:white;
+    padding:40px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 10px 35px rgba(255,0,90,0.18);
+    max-width:420px;
+    width:90%;
+}
 
-        .timer{
-            margin-top:15px;
-            color:#777;
-        }
+h1{
+    margin-bottom:30px;
+}
 
-    </style>
+/* Buttons */
+button{
+    padding:12px 26px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+/* YES button */
+#yes{
+    background:#ff4d88;
+    color:white;
+    opacity:0.5;
+    pointer-events:none;
+}
+
+/* Glow when active */
+.yes-active{
+    opacity:1 !important;
+    pointer-events:auto !important;
+    animation:glow 1.2s infinite alternate;
+}
+
+@keyframes glow{
+    from{
+        box-shadow:0 0 8px #ff4d88;
+    }
+    to{
+        box-shadow:0 0 22px #ff4d88;
+    }
+}
+
+#yes:hover{
+    transform:scale(1.08);
+}
+
+/* NO button */
+#no{
+    background:#eee;
+    position:absolute;
+}
+
+.btn-container{
+    position:relative;
+    height:120px;
+}
+
+.timer{
+    margin-top:15px;
+    color:#777;
+}
+
+</style>
 </head>
 
 <body>
 
+<!-- Floating hearts -->
+<div class="hearts"></div>
+
 <div class="card">
 
-    <h1>Harshita, will you be my Valentine? 💖</h1>
+    <h1 id="title"></h1>
 
     <div class="btn-container">
         <button id="yes">Yes</button>
@@ -76,7 +142,44 @@
 
 </div>
 
+
+<!-- Confetti Library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
+
+/* ❤️ Generate Floating Hearts */
+
+const heartsContainer = document.querySelector(".hearts");
+const emojis = ["❤️","💖","💕","💘"];
+
+for(let i=0;i<25;i++){
+
+    const heart = document.createElement("span");
+
+    heart.innerHTML =
+        emojis[Math.floor(Math.random()*emojis.length)];
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random()*18 + 12) + "px";
+
+    /* random speed */
+    heart.style.animationDuration = (Math.random()*6 + 4) + "s";
+
+    heartsContainer.appendChild(heart);
+}
+
+
+/* ⭐ Dynamic Name */
+
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name') || "Harshita";
+
+document.getElementById("title").innerText =
+`${name}, will you be my Valentine? 💖`;
+
+
+/* Elements */
 
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
@@ -84,42 +187,71 @@ const timerText = document.getElementById("timer");
 
 let seconds = 10;
 
-// countdown
+
+/* Countdown */
+
 const countdown = setInterval(() => {
 
     seconds--;
-    timerText.innerText = "You can press YES in " + seconds + " seconds 🙂";
+
+    timerText.innerText =
+    "You can press YES in " + seconds + " seconds 🙂";
 
     if(seconds <= 0){
+
         clearInterval(countdown);
-        yesBtn.style.opacity = "1";
-        yesBtn.style.pointerEvents = "auto";
-        timerText.innerText = "Now you can press YES 😌";
+
+        yesBtn.classList.add("yes-active");
+
+        timerText.innerText =
+        "Now you can press YES 😌";
     }
 
 },1000);
 
 
-// move NO button
+
+/* Smarter NO button */
+
 function moveButton(){
 
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
+    const x = Math.random() * (window.innerWidth - 140);
+    const y = Math.random() * (window.innerHeight - 140);
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
 
-// works on desktop hover
 noBtn.addEventListener("mouseover", moveButton);
-
-// works on mobile touch
 noBtn.addEventListener("touchstart", moveButton);
 
 
-// redirect
+
+/* 🎉 Confetti + Redirect */
+
 yesBtn.addEventListener("click", () => {
-    window.location.href = "yes.html";
+
+    const duration = 1800;
+    const end = Date.now() + duration;
+
+    const confettiInterval = setInterval(function() {
+
+        if (Date.now() > end) {
+
+            clearInterval(confettiInterval);
+
+            window.location.href =
+            `yes.html?name=${name}`;
+        }
+
+        confetti({
+            particleCount:10,
+            spread:80,
+            origin:{ y:0.6 }
+        });
+
+    },250);
+
 });
 
 </script>
