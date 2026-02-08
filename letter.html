@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>A Letter For You ❤️</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ffe6f0,#ffd6e7);
+    font-family:Arial;
+}
+
+.container{
+    text-align:center;
+    max-width:500px;
+    width:90%;
+}
+
+/* Envelope */
+
+.envelope{
+    width:220px;
+    height:140px;
+    background:#ff4d88;
+    border-radius:10px;
+    cursor:pointer;
+    margin:auto;
+    transition:0.4s;
+}
+
+.envelope:hover{
+    transform:scale(1.1);
+}
+
+/* Letter box */
+
+.letter{
+    display:none;
+    margin-top:25px;
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(255,0,90,0.2);
+}
+
+button{
+    margin-top:20px;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d88;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2 id="heading"></h2>
+
+<div class="envelope" onclick="openLetter()"></div>
+
+<div class="letter">
+
+<p id="message"></p>
+
+<button onclick="goToMemories()">
+Open Our Memories 📸
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* ⭐ Dynamic Name */
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name') || "Harshita";
+
+document.getElementById("heading").innerText =
+`A letter for you, ${name} ❤️`;
+
+
+/* 💌 Typing Message */
+
+const text = `
+From the moment you walked into my life,
+everything started feeling brighter.
+
+Your smile is my favorite sight,
+your voice — my favorite sound.
+
+If I had one wish,
+it would simply be more moments with you.
+
+Happy Rose Day ❤️
+`;
+
+let i = 0;
+
+function typeWriter(){
+
+    if(i < text.length){
+
+        document.getElementById("message")
+        .innerHTML += text.charAt(i);
+
+        i++;
+
+        setTimeout(typeWriter, 35);
+    }
+}
+
+function openLetter(){
+
+    document.querySelector(".letter").style.display="block";
+
+    typeWriter();
+}
+
+
+/* Navigate to memories with name */
+
+function goToMemories(){
+    window.location.href =
+    `memories.html?name=${name}`;
+}
+
+</script>
+
+</body>
+</html>
