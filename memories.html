@@ -176,11 +176,49 @@ img{
 
 <body>
 
-<!-- ✅ GLOBAL MUSIC PLAYER (CORRECT PLACEMENT) 
-<iframe src="music.html"
-style="display:none"
-allow="autoplay">
-</iframe> -->
+<!-- GLOBAL BACKGROUND MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const music = document.getElementById("bgMusic");
+
+// restore playback time
+const savedTime = localStorage.getItem("musicTime");
+
+if(savedTime){
+    music.currentTime = savedTime;
+}
+
+// resume automatically if already started
+if(localStorage.getItem("musicStarted") === "true"){
+
+    music.volume = 0.20;
+
+    music.play().catch(()=>{});
+}
+
+
+// keep saving playback position
+setInterval(()=>{
+    localStorage.setItem("musicTime", music.currentTime);
+},1000);
+
+
+// function to start music
+function startMusic(){
+
+    music.volume = 0.20;
+
+    music.play();
+
+    localStorage.setItem("musicStarted","true");
+}
+
+</script>
+
 
 <div class="hearts"></div>
 <div class="blob"></div>
