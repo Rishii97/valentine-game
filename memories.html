@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Our Memories ❤️</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+    margin:0;
+    background:#ffe6f0;
+    font-family:Arial;
+    text-align:center;
+}
+
+h1{
+    margin-top:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+    max-width:500px;
+    margin:30px auto;
+}
+
+.box{
+    height:160px;
+    background:white;
+    border-radius:14px;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.1);
+}
+
+img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="title"></h1>
+
+<div class="grid">
+
+<div class="box" onclick="reveal(this,'photo1.jpg')">🎁</div>
+<div class="box" onclick="reveal(this,'photo2.jpg')">🎁</div>
+<div class="box" onclick="reveal(this,'photo3.jpg')">🎁</div>
+<div class="box" onclick="reveal(this,'photo4.jpg')">🎁</div>
+
+</div>
+
+<script>
+
+/* Dynamic name */
+
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name') || "Harshita";
+
+document.getElementById("title").innerText =
+`${name}, these are some of my favorite memories with you ❤️`;
+
+
+/* Reveal photos */
+
+function reveal(el,photo){
+
+    el.innerHTML =
+    `<img src="assets/${photo}">`;
+}
+
+</script>
+
+</body>
+</html>
