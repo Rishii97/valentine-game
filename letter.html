@@ -6,6 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- PREMIUM FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 
 body{
@@ -14,56 +17,118 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#ffe6f0,#ffd6e7);
-    font-family:Arial;
+
+    background:linear-gradient(135deg,#ffe6f0,#ffd6e7,#fff0f5);
+
+    font-family:'Poppins', sans-serif;
+
+    animation:fadeIn 1s ease;
 }
+
+/* Smooth entry */
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* Soft blurred background blob */
+.blob{
+    position:fixed;
+    width:400px;
+    height:400px;
+    background:#ffb6c1;
+    filter:blur(120px);
+    top:-120px;
+    right:-120px;
+    z-index:-1;
+}
+
 
 .container{
     text-align:center;
-    max-width:500px;
+    max-width:520px;
     width:90%;
 }
+
+
+/* ⭐ Glass Card */
+.letter{
+    display:none;
+
+    margin-top:30px;
+
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(14px);
+
+    padding:35px;
+    border-radius:22px;
+
+    box-shadow:0 12px 40px rgba(255,0,90,0.18);
+
+    line-height:1.7;
+    font-size:17px;
+}
+
 
 /* Envelope */
 
 .envelope{
-    width:220px;
-    height:140px;
-    background:#ff4d88;
-    border-radius:10px;
+    width:230px;
+    height:150px;
+
+    background:linear-gradient(135deg,#ff4d88,#ff7aa2);
+    border-radius:14px;
+
     cursor:pointer;
     margin:auto;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:40px;
+
     transition:0.4s;
 }
 
 .envelope:hover{
-    transform:scale(1.1);
+    transform:translateY(-6px) scale(1.05);
+    box-shadow:0 10px 25px rgba(255,0,90,0.35);
 }
 
-/* Letter box */
 
-.letter{
-    display:none;
-    margin-top:25px;
-    background:white;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 10px 30px rgba(255,0,90,0.2);
-}
+/* Premium Button */
 
 button{
-    margin-top:20px;
-    padding:12px 20px;
+    margin-top:25px;
+    padding:14px 26px;
+
     border:none;
-    border-radius:10px;
-    background:#ff4d88;
+    border-radius:12px;
+
+    background:linear-gradient(135deg,#ff4d88,#ff7aa2);
     color:white;
+
     font-size:16px;
     cursor:pointer;
+
+    transition:0.25s;
 }
 
 button:hover{
-    transform:scale(1.05);
+    transform:translateY(-3px);
+    box-shadow:0 8px 25px rgba(255,77,136,0.4);
+}
+
+h2{
+    font-weight:600;
 }
 
 </style>
@@ -72,11 +137,15 @@ button:hover{
 
 <body>
 
+<div class="blob"></div>
+
 <div class="container">
 
 <h2 id="heading"></h2>
 
-<div class="envelope" onclick="openLetter()"></div>
+<div class="envelope" onclick="openLetter()">
+💌
+</div>
 
 <div class="letter">
 
@@ -92,7 +161,7 @@ Open Our Memories 📸
 
 <script>
 
-/* ⭐ Dynamic Name */
+/* Dynamic Name */
 const params = new URLSearchParams(window.location.search);
 const name = params.get('name') || "Harshita";
 
@@ -100,7 +169,8 @@ document.getElementById("heading").innerText =
 `A letter for you, ${name} ❤️`;
 
 
-/* 💌 Typing Message */
+
+/* 💌 Cinematic Typing */
 
 const text = `
 From the moment you walked into my life,
@@ -126,7 +196,7 @@ function typeWriter(){
 
         i++;
 
-        setTimeout(typeWriter, 35);
+        setTimeout(typeWriter, 28); // smoother speed
     }
 }
 
@@ -138,11 +208,16 @@ function openLetter(){
 }
 
 
-/* Navigate to memories with name */
-
+/* Smooth Transition */
 function goToMemories(){
-    window.location.href =
-    `memories.html?name=${name}`;
+
+    document.body.style.opacity="0";
+    document.body.style.transition="0.5s";
+
+    setTimeout(()=>{
+        window.location.href =
+        `memories.html?name=${name}`;
+    },500);
 }
 
 </script>
