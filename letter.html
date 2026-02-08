@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PREMIUM FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -21,11 +20,12 @@ body{
     background:linear-gradient(135deg,#ffe6f0,#ffd6e7,#fff0f5);
 
     font-family:'Poppins', sans-serif;
+    overflow:hidden;
 
     animation:fadeIn 1s ease;
 }
 
-/* Smooth entry */
+/* Fade in */
 @keyframes fadeIn{
     from{
         opacity:0;
@@ -38,7 +38,35 @@ body{
 }
 
 
-/* Soft blurred background blob */
+/* ❤️ Floating Hearts */
+
+.hearts{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:0;
+}
+
+.hearts span{
+    position:absolute;
+    bottom:-20px;
+    font-size:18px;
+    opacity:0.12;
+    animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    to{
+        transform:translateY(-120vh);
+    }
+}
+
+
+/* Soft gradient blob */
+
 .blob{
     position:fixed;
     width:400px;
@@ -51,14 +79,33 @@ body{
 }
 
 
+/* Cursor glow */
+
+.cursor-glow{
+    position:fixed;
+    width:180px;
+    height:180px;
+    background:radial-gradient(circle, rgba(255,77,136,0.25), transparent);
+    pointer-events:none;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    z-index:1;
+}
+
+
+/* Container */
+
 .container{
     text-align:center;
     max-width:520px;
     width:90%;
+    position:relative;
+    z-index:2;
 }
 
 
-/* ⭐ Glass Card */
+/* Glass Letter */
+
 .letter{
     display:none;
 
@@ -137,15 +184,15 @@ h2{
 
 <body>
 
+<div class="hearts"></div>
 <div class="blob"></div>
+<div class="cursor-glow"></div>
 
 <div class="container">
 
 <h2 id="heading"></h2>
 
-<div class="envelope" onclick="openLetter()">
-💌
-</div>
+<div class="envelope" onclick="openLetter()">💌</div>
 
 <div class="letter">
 
@@ -161,18 +208,47 @@ Open Our Memories 📸
 
 <script>
 
-/* Dynamic Name */
-const params = new URLSearchParams(window.location.search);
-const name = params.get('name') || "Harshita";
+/* ❤️ Generate Floating Hearts */
 
-document.getElementById("heading").innerText =
+const hearts=document.querySelector(".hearts");
+const emojis=["❤️","💖","💕"];
+
+for(let i=0;i<12;i++){
+
+    const heart=document.createElement("span");
+
+    heart.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(Math.random()*12+12)+"px";
+    heart.style.animationDuration=(Math.random()*6+7)+"s";
+
+    hearts.appendChild(heart);
+}
+
+
+/* Cursor Glow */
+
+const glow=document.querySelector(".cursor-glow");
+
+document.addEventListener("mousemove",(e)=>{
+    glow.style.left=e.clientX+"px";
+    glow.style.top=e.clientY+"px";
+});
+
+
+/* Dynamic Name */
+
+const params=new URLSearchParams(window.location.search);
+const name=params.get('name')||"Harshita";
+
+document.getElementById("heading").innerText=
 `A letter for you, ${name} ❤️`;
 
 
+/* Typing Message */
 
-/* 💌 Cinematic Typing */
-
-const text = `
+const text=`
 From the moment you walked into my life,
 everything started feeling brighter.
 
@@ -185,7 +261,7 @@ it would simply be more moments with you.
 Happy Rose Day ❤️
 `;
 
-let i = 0;
+let i=0;
 
 function typeWriter(){
 
@@ -196,7 +272,7 @@ function typeWriter(){
 
         i++;
 
-        setTimeout(typeWriter, 28); // smoother speed
+        setTimeout(typeWriter, 28);
     }
 }
 
@@ -209,13 +285,14 @@ function openLetter(){
 
 
 /* Smooth Transition */
+
 function goToMemories(){
 
     document.body.style.opacity="0";
     document.body.style.transition="0.5s";
 
     setTimeout(()=>{
-        window.location.href =
+        window.location.href=
         `memories.html?name=${name}`;
     },500);
 }
