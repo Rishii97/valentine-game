@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Will you be my Valentine?</title>
+<title>Will you be my Valentine?</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Premium Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 
@@ -13,77 +16,113 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#ffe6f0,#ffd6e7);
-    font-family:Arial;
     overflow:hidden;
+
+    background:linear-gradient(135deg,#ffe6f0,#ffd6e7,#fff0f5);
+    font-family:'Poppins', sans-serif;
+
+    animation:fadeIn 1s ease;
 }
 
-/* ❤️ Floating Hearts Container */
-.hearts{
+/* Smooth entry */
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* 🌹 Falling Rose Petals */
+
+.petals{
     position:fixed;
     width:100%;
     height:100%;
     top:0;
     left:0;
-    overflow:hidden;
+    pointer-events:none;
     z-index:0;
 }
 
-/* Individual hearts */
-.hearts span{
+.petals span{
     position:absolute;
-    bottom:-20px;
-    animation:float linear infinite;
+    top:-20px;
+    font-size:18px;
+    animation:fall linear infinite;
 }
 
-/* Floating animation */
-@keyframes float{
-    from{
-        transform:translateY(0);
-        opacity:1;
-    }
+@keyframes fall{
     to{
-        transform:translateY(-110vh);
-        opacity:0;
+        transform:translateY(110vh) rotate(360deg);
     }
 }
 
-/* Card ABOVE hearts */
+
+/* Cursor Glow */
+
+.cursor-glow{
+    position:fixed;
+    width:180px;
+    height:180px;
+    background:radial-gradient(circle, rgba(255,77,136,0.35), transparent);
+    pointer-events:none;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    z-index:1;
+}
+
+
+/* Glass Card */
+
 .card{
     position:relative;
     z-index:2;
-    background:white;
-    padding:40px;
-    border-radius:18px;
+
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(14px);
+
+    padding:45px;
+    border-radius:22px;
+
     text-align:center;
-    box-shadow:0 10px 35px rgba(255,0,90,0.18);
+
+    box-shadow:0 12px 45px rgba(255,0,90,0.18);
+
     max-width:420px;
     width:90%;
 }
 
 h1{
     margin-bottom:30px;
+    font-weight:600;
 }
 
+
 /* Buttons */
+
 button{
-    padding:12px 26px;
-    font-size:18px;
+    padding:14px 28px;
+    font-size:17px;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     cursor:pointer;
     transition:0.25s;
 }
 
 /* YES button */
+
 #yes{
-    background:#ff4d88;
+    background:linear-gradient(135deg,#ff4d88,#ff7aa2);
     color:white;
     opacity:0.5;
     pointer-events:none;
 }
 
-/* Glow when active */
 .yes-active{
     opacity:1 !important;
     pointer-events:auto !important;
@@ -92,18 +131,20 @@ button{
 
 @keyframes glow{
     from{
-        box-shadow:0 0 8px #ff4d88;
+        box-shadow:0 0 10px #ff4d88;
     }
     to{
-        box-shadow:0 0 22px #ff4d88;
+        box-shadow:0 0 28px #ff4d88;
     }
 }
 
 #yes:hover{
-    transform:scale(1.08);
+    transform:translateY(-3px);
 }
 
+
 /* NO button */
+
 #no{
     background:#eee;
     position:absolute;
@@ -115,8 +156,8 @@ button{
 }
 
 .timer{
-    margin-top:15px;
-    color:#777;
+    margin-top:18px;
+    color:#666;
 }
 
 </style>
@@ -124,8 +165,11 @@ button{
 
 <body>
 
-<!-- Floating hearts -->
-<div class="hearts"></div>
+<!-- 🌹 Rose petals -->
+<div class="petals"></div>
+
+<!-- Cursor glow -->
+<div class="cursor-glow"></div>
 
 <div class="card">
 
@@ -143,34 +187,41 @@ button{
 </div>
 
 
-<!-- Confetti Library -->
+<!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
 
-/* ❤️ Generate Floating Hearts */
+/* 🌹 Generate Rose Petals */
 
-const heartsContainer = document.querySelector(".hearts");
-const emojis = ["❤️","💖","💕","💘"];
+const petals = document.querySelector(".petals");
 
-for(let i=0;i<25;i++){
+for(let i=0;i<18;i++){
 
-    const heart = document.createElement("span");
+    const petal = document.createElement("span");
 
-    heart.innerHTML =
-        emojis[Math.floor(Math.random()*emojis.length)];
+    petal.innerHTML="🌹";
 
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (Math.random()*18 + 12) + "px";
+    petal.style.left=Math.random()*100+"vw";
+    petal.style.fontSize=(Math.random()*10+14)+"px";
 
-    /* random speed */
-    heart.style.animationDuration = (Math.random()*6 + 4) + "s";
+    petal.style.animationDuration=(Math.random()*5+5)+"s";
 
-    heartsContainer.appendChild(heart);
+    petals.appendChild(petal);
 }
 
 
-/* ⭐ Dynamic Name */
+/* Cursor Glow */
+
+const glow=document.querySelector(".cursor-glow");
+
+document.addEventListener("mousemove",(e)=>{
+    glow.style.left=e.clientX+"px";
+    glow.style.top=e.clientY+"px";
+});
+
+
+/* Dynamic Name */
 
 const params = new URLSearchParams(window.location.search);
 const name = params.get('name') || "Harshita";
@@ -211,7 +262,7 @@ const countdown = setInterval(() => {
 
 
 
-/* Smarter NO button */
+/* Move NO button */
 
 function moveButton(){
 
@@ -227,11 +278,11 @@ noBtn.addEventListener("touchstart", moveButton);
 
 
 
-/* 🎉 Confetti + Redirect */
+/* Confetti + Smooth Redirect */
 
 yesBtn.addEventListener("click", () => {
 
-    const duration = 1800;
+    const duration = 1600;
     const end = Date.now() + duration;
 
     const confettiInterval = setInterval(function() {
@@ -240,13 +291,18 @@ yesBtn.addEventListener("click", () => {
 
             clearInterval(confettiInterval);
 
-            window.location.href =
-            `yes.html?name=${name}`;
+            document.body.style.opacity="0";
+            document.body.style.transition="0.5s";
+
+            setTimeout(()=>{
+                window.location.href =
+                `yes.html?name=${name}`;
+            },500);
         }
 
         confetti({
-            particleCount:10,
-            spread:80,
+            particleCount:8,
+            spread:70,
             origin:{ y:0.6 }
         });
 

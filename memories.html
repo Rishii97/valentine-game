@@ -33,10 +33,19 @@ h1{
 
 .box{
     background:white;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 6px 20px rgba(0,0,0,0.1);
+    padding:12px;
+    border-radius:6px;
+
+    box-shadow:0 12px 25px rgba(0,0,0,0.18);
+
+    transform:rotate(calc(-3deg + 6deg * var(--r)));
+    transition:0.4s;
 }
+
+.box:hover{
+    transform:rotate(0deg) scale(1.05);
+}
+
 
 
 img{
@@ -78,8 +87,10 @@ document.getElementById("title").innerText =
 
 function reveal(el,photo){
 
+    el.style.setProperty('--r', Math.random());
+
     el.innerHTML =
-    `<img src="assets/${photo}">`;
+    `<img src="assets/${photo}" onclick="openViewer('assets/${photo}')">`;
 }
 
 </script>
