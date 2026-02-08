@@ -12,34 +12,27 @@
 
 body{
     margin:0;
+
+    /* 🔥 THIS FIXES SCROLL */
     min-height:100vh;
+
     display:flex;
     justify-content:center;
-    align-items:center;
+
+    /* start slightly higher instead of strict center */
+    align-items:flex-start;
+
+    padding:80px 20px;
 
     background:linear-gradient(135deg,#ffe6eb,#ffd6e0,#fff0f5);
 
     font-family:'Poppins', sans-serif;
-    overflow:hidden;
 
-    animation:fadeIn 1s ease;
-}
-
-/* Fade in */
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    overflow-x:hidden;
 }
 
 
-/* ❤️ VERY SOFT FLOATING HEARTS */
+/* Floating Hearts */
 
 .hearts{
     position:fixed;
@@ -55,7 +48,7 @@ body{
     position:absolute;
     bottom:-20px;
     font-size:16px;
-    opacity:0.08; /* VERY IMPORTANT — keeps it premium */
+    opacity:0.08;
     animation:floatUp linear infinite;
 }
 
@@ -66,7 +59,7 @@ body{
 }
 
 
-/* Gradient blob */
+/* Soft glow blob */
 
 .blob{
     position:fixed;
@@ -77,20 +70,6 @@ body{
     top:-120px;
     right:-120px;
     z-index:-1;
-}
-
-
-/* Cursor glow */
-
-.cursor-glow{
-    position:fixed;
-    width:180px;
-    height:180px;
-    background:radial-gradient(circle, rgba(255,77,136,0.25), transparent);
-    pointer-events:none;
-    border-radius:50%;
-    transform:translate(-50%,-50%);
-    z-index:1;
 }
 
 
@@ -105,8 +84,8 @@ body{
 
     box-shadow:0 12px 45px rgba(255,0,90,0.18);
 
-    max-width:500px;
-    width:90%;
+    max-width:520px;
+    width:100%;
 
     text-align:center;
 
@@ -126,6 +105,9 @@ h2{
 p{
     color:#666;
 }
+
+
+/* Spotify spacing */
 
 iframe{
     margin-top:25px;
@@ -177,7 +159,6 @@ iframe{
 
 <div class="hearts"></div>
 <div class="blob"></div>
-<div class="cursor-glow"></div>
 
 <div class="card">
 
@@ -195,11 +176,12 @@ iframe{
         Press play… and feel it 🌹
     </p>
 
+    <!-- 🔥 Reduced height for better mobile UX -->
     <iframe 
     style="border-radius:12px" 
     src="https://open.spotify.com/embed/playlist/2PfBKqiyh6cIOPDNg1f1e0"
     width="100%" 
-    height="352"
+    height="300"
     frameBorder="0"
     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
     </iframe>
@@ -210,14 +192,23 @@ iframe{
 
 </div>
 
+
+
+<!-- MUSIC PLAYER -->
+<audio id="bgMusic" loop>
+    <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+
+
+
 <script>
 
-/* Generate SOFT hearts */
+/* Floating hearts */
 
 const hearts=document.querySelector(".hearts");
 const emojis=["❤️","💖","💕"];
 
-for(let i=0;i<10;i++){   // IMPORTANT — keep low count
+for(let i=0;i<10;i++){
 
     const heart=document.createElement("span");
 
@@ -231,15 +222,6 @@ for(let i=0;i<10;i++){   // IMPORTANT — keep low count
 }
 
 
-/* Cursor glow */
-
-const glow=document.querySelector(".cursor-glow");
-
-document.addEventListener("mousemove",(e)=>{
-    glow.style.left=e.clientX+"px";
-    glow.style.top=e.clientY+"px";
-});
-
 
 /* Dynamic name */
 
@@ -250,9 +232,29 @@ document.getElementById("title").innerText=
 `Happy Rose Day, ${name} 🌹`;
 
 
+
+/* MUSIC SYSTEM */
+
+const music=document.getElementById("bgMusic");
+
+if(localStorage.getItem("musicPlaying")==="true"){
+    music.volume=0.3;
+    music.play().catch(()=>{});
+}
+
+function startMusic(){
+    music.volume=0.3;
+    music.play();
+    localStorage.setItem("musicPlaying","true");
+}
+
+
+
 /* Smooth transition */
 
 function goToLetter(){
+
+    startMusic();
 
     document.body.style.opacity="0";
     document.body.style.transition="0.5s";
