@@ -6,47 +6,131 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 
 body{
     margin:0;
-    background:linear-gradient(135deg,#ffe6f0,#ffd6e7);
-    font-family:Arial;
+    background:linear-gradient(135deg,#ffe6f0,#ffd6e7,#fff0f5);
+    font-family:'Poppins', sans-serif;
+    overflow-x:hidden;
+
+    animation:fadeIn 1s ease;
+}
+
+/* Fade in */
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* ❤️ Floating Hearts */
+
+.hearts{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:0;
+}
+
+.hearts span{
+    position:absolute;
+    bottom:-20px;
+    font-size:18px;
+    opacity:0.15;
+    animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    to{
+        transform:translateY(-120vh);
+    }
+}
+
+
+/* Soft background blob */
+
+.blob{
+    position:fixed;
+    width:400px;
+    height:400px;
+    background:#ffb6c1;
+    filter:blur(120px);
+    top:-120px;
+    right:-120px;
+    z-index:-1;
+}
+
+
+/* Cursor glow */
+
+.cursor-glow{
+    position:fixed;
+    width:180px;
+    height:180px;
+    background:radial-gradient(circle, rgba(255,77,136,0.25), transparent);
+    pointer-events:none;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    z-index:1;
 }
 
 
 h1{
     text-align:center;
-    margin-top:40px;
+    margin-top:50px;
+    font-weight:600;
+    position:relative;
+    z-index:2;
 }
 
+
+/* Grid */
 
 .grid{
+    position:relative;
+    z-index:2;
+
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-    gap:20px;
-    max-width:900px;
-    margin:40px auto;
-    padding:0 20px;
+    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+    gap:26px;
+
+    max-width:950px;
+    margin:50px auto;
+    padding:0 25px;
 }
 
 
+/* Glass cards */
+
 .box{
-    background:white;
-    padding:12px;
-    border-radius:6px;
+    background:rgba(255,255,255,0.8);
+    backdrop-filter:blur(10px);
 
-    box-shadow:0 12px 25px rgba(0,0,0,0.18);
+    border-radius:20px;
+    overflow:hidden;
 
-    transform:rotate(calc(-3deg + 6deg * var(--r)));
-    transition:0.4s;
+    cursor:pointer;
+
+    box-shadow:0 10px 35px rgba(255,0,90,0.15);
+
+    transition:0.35s;
 }
 
 .box:hover{
-    transform:rotate(0deg) scale(1.05);
+    transform:translateY(-6px);
 }
-
-
 
 img{
     width:100%;
@@ -55,11 +139,46 @@ img{
 }
 
 
+/* Fullscreen viewer */
+
+.viewer{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,0.75);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:0.4s;
+}
+
+.viewer.active{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.viewer img{
+    max-width:90%;
+    max-height:85%;
+    border-radius:20px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
 </style>
 
 </head>
 
 <body>
+
+<div class="hearts"></div>
+<div class="blob"></div>
+<div class="cursor-glow"></div>
 
 <h1 id="title"></h1>
 
@@ -72,25 +191,73 @@ img{
 
 </div>
 
+
+<div class="viewer" id="viewer" onclick="closeViewer()">
+    <img id="viewerImg">
+</div>
+
+
 <script>
+
+/* ❤️ Generate Floating Hearts */
+
+const hearts=document.querySelector(".hearts");
+const emojis=["❤️","💖","💕"];
+
+for(let i=0;i<14;i++){
+
+    const heart=document.createElement("span");
+
+    heart.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(Math.random()*12+12)+"px";
+    heart.style.animationDuration=(Math.random()*6+6)+"s";
+
+    hearts.appendChild(heart);
+}
+
+
+/* Cursor glow */
+
+const glow=document.querySelector(".cursor-glow");
+
+document.addEventListener("mousemove",(e)=>{
+    glow.style.left=e.clientX+"px";
+    glow.style.top=e.clientY+"px";
+});
+
 
 /* Dynamic name */
 
-const params = new URLSearchParams(window.location.search);
-const name = params.get('name') || "Harshita";
+const params=new URLSearchParams(window.location.search);
+const name=params.get('name')||"Harshita";
 
-document.getElementById("title").innerText =
-`${name}, Some of my favorite pictures of you… because every time I look at them, I’m reminded of how beautiful you truly are ❤️`;
+document.getElementById("title").innerText=
+`${name}, these are some of my favorite pictures of you — moments I could admire forever ❤️`;
 
 
 /* Reveal photos */
 
 function reveal(el,photo){
 
-    el.style.setProperty('--r', Math.random());
-
-    el.innerHTML =
+    el.innerHTML=
     `<img src="assets/${photo}" onclick="openViewer('assets/${photo}')">`;
+}
+
+
+/* Viewer */
+
+const viewer=document.getElementById("viewer");
+const viewerImg=document.getElementById("viewerImg");
+
+function openViewer(src){
+    viewer.classList.add("active");
+    viewerImg.src=src;
+}
+
+function closeViewer(){
+    viewer.classList.remove("active");
 }
 
 </script>
