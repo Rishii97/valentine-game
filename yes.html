@@ -157,11 +157,11 @@ iframe{
 
 <body>
     
-<!-- ✅ GLOBAL MUSIC PLAYER (CORRECT PLACEMENT) -->
+<!-- ✅ GLOBAL MUSIC PLAYER (CORRECT PLACEMENT) 
 <iframe src="music.html"
 style="display:none"
 allow="autoplay">
-</iframe>
+</iframe> -->
 
 <div class="hearts"></div>
 <div class="blob"></div>
@@ -260,16 +260,27 @@ function startMusic(){
 
 function goToLetter(){
 
-    startMusic();
+    // Open music in a tiny hidden popup
+    if(!localStorage.getItem("musicWindow")){
+
+        const musicWindow = window.open(
+            "music.html",
+            "musicWindow",
+            "width=1,height=1,left=-1000,top=-1000"
+        );
+
+        localStorage.setItem("musicWindow","true");
+    }
 
     document.body.style.opacity="0";
     document.body.style.transition="0.5s";
 
     setTimeout(()=>{
-        window.location.href=
+        window.location.href =
         `letter.html?name=${name}`;
     },500);
 }
+
 
 </script>
 
