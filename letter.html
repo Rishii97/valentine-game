@@ -12,7 +12,10 @@
 
 body{
     margin:0;
-    height:100vh;
+
+    /* ✅ FIXED — allows small screens */
+    min-height:100vh;
+
     display:flex;
     justify-content:center;
     align-items:center;
@@ -20,10 +23,13 @@ body{
     background:linear-gradient(135deg,#ffe6f0,#ffd6e7,#fff0f5);
 
     font-family:'Poppins', sans-serif;
-    overflow:hidden;
+
+    /* ✅ prevents sideways scroll but allows vertical */
+    overflow-x:hidden;
 
     animation:fadeIn 1s ease;
 }
+
 
 /* Fade in */
 @keyframes fadeIn{
@@ -184,6 +190,13 @@ h2{
 
 <body>
 
+<!-- ✅ GLOBAL MUSIC PLAYER (CORRECT PLACEMENT) -->
+<iframe src="music.html"
+style="display:none"
+allow="autoplay">
+</iframe>
+
+
 <div class="hearts"></div>
 <div class="blob"></div>
 <div class="cursor-glow"></div>
@@ -208,7 +221,7 @@ Open Our Memories 📸
 
 <script>
 
-/* ❤️ Generate Floating Hearts */
+/* ❤️ Floating Hearts */
 
 const hearts=document.querySelector(".hearts");
 const emojis=["❤️","💖","💕"];
